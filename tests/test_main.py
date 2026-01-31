@@ -1,7 +1,11 @@
 """Unit tests for main.py PySpark functions."""
 
 import pytest
-from main import count_dataframe_rows, create_spark_session
+
+from pyspark_github_action_windows.main import (
+    count_dataframe_rows,
+    create_spark_session,
+)
 
 
 @pytest.fixture(scope="module")

@@ -17,6 +17,20 @@ dependencies = [
 [project.scripts]
 pyspark-github-action-windows = "pyspark_github_action_windows:main"
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
