@@ -1,0 +1,22 @@
+[project]
+name = "pyspark-github-action-windows"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Andy7475", email = "Andy7475@users.noreply.github.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "coverage>=7.13.2",
+    "pandas>=3.0.0",
+    "pyspark>=4.1.1",
+    "pytest>=9.0.2",
+]
+
+[project.scripts]
+pyspark-github-action-windows = "pyspark_github_action_windows:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
