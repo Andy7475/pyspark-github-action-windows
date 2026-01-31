@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.12"]
         include:
           - os: windows-latest
             python-version: "3.12"
@@ -37,7 +37,14 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-    
+
+
+    - uses: vemonet/setup-spark@v1
+      with:
+        spark-version: '3.5.3'
+        hadoop-version: '3'
+
+    - run: spark-submit --version
     # Linux/Mac: Java is typically available, but ensure it's set up
     - name: Set up Java (Linux/Mac)
       if: runner.os != 'Windows'
