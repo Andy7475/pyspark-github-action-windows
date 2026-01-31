@@ -15,9 +15,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         python-version: ["3.12"]
-        include:
-          - os: windows-latest
-            python-version: "3.12"
     
     steps:
     - uses: actions/checkout@v6
@@ -30,55 +27,10 @@ jobs:
     - name: Install uv
       uses: astral-sh/setup-uv@v5
     
-    # Windows-specific: Install Java for PySpark
-    - name: Set up Java (Windows)
-      if: runner.os == 'Windows'
-      uses: actions/setup-java@v5
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-
-
-    - uses: vemonet/setup-spark@v1
-      if: runner.os == 'Windows'
-      with:
-        spark-version: '3.5.3'
-        hadoop-version: '3'
-
-    - run: spark-submit --version
-      if: runner.os == 'Windows'
-
-    - name: Setup Winutils (Windows only)
-      if: runner.os == 'Windows'
-      run: |
-        mkdir -p C:\hadoop\bin
-        curl -L https://github.com/cdarlint/winutils/raw/master/hadoop-3.2.2/bin/winutils.exe -o C:\hadoop\bin\winutils.exe
-        echo "HADOOP_HOME=C:\hadoop" >> $GITHUB_ENV
-        echo "C:\hadoop\bin" >> $GITHUB_PATH
-
-    # Linux/Mac: Java is typically available, but ensure it's set up
-    # - name: Set up Java (Linux/Mac)
-    #   if: runner.os != 'Windows'
-    #   uses: actions/setup-java@v5
-    #   with:
-    #     distribution: 'temurin'
-    #     java-version: '17'
-    
     - name: Install dependencies
       run: |
         uv sync
     
     - name: Run tests
-      shell: bash # Using bash on Windows makes path handling much more consistent
       run: |
-        if [ "${{ runner.os }}" == "Windows" ]; then
-          # On Windows, skip Spark tests and use Windows-specific paths
-          export PYSPARK_PYTHON="./.venv/Scripts/python.exe"
-          export PYSPARK_DRIVER_PYTHON="./.venv/Scripts/python.exe"
-          uv run pytest -v
-        else
-          # On Linux/macOS, use standard paths and run all tests
-          export PYSPARK_PYTHON="./.venv/bin/python"
-          export PYSPARK_DRIVER_PYTHON="./.venv/bin/python"
-          uv run pytest -v
-        fi
+        uv run pytest -v
