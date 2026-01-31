@@ -40,18 +40,20 @@ jobs:
 
 
     - uses: vemonet/setup-spark@v1
+      if: runner.os == 'Windows'
       with:
         spark-version: '3.5.3'
         hadoop-version: '3'
 
     - run: spark-submit --version
+      if: runner.os == 'Windows'
     # Linux/Mac: Java is typically available, but ensure it's set up
-    - name: Set up Java (Linux/Mac)
-      if: runner.os != 'Windows'
-      uses: actions/setup-java@v5
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+    # - name: Set up Java (Linux/Mac)
+    #   if: runner.os != 'Windows'
+    #   uses: actions/setup-java@v5
+    #   with:
+    #     distribution: 'temurin'
+    #     java-version: '17'
     
     - name: Install dependencies
       run: |
