@@ -70,9 +70,15 @@ jobs:
     
     - name: Run tests
       shell: bash # Using bash on Windows makes path handling much more consistent
-      env:
-        # Crucial for UV: Points Spark to the virtualenv's Python
-        PYSPARK_PYTHON: ./.venv/Scripts/python.exe
-        PYSPARK_DRIVER_PYTHON: ./.venv/Scripts/python.exe
       run: |
-        uv run pytest -v
+        if [ "${{ runner.os }}" == "Windows" ]; then
+          # On Windows, skip Spark tests and use Windows-specific paths
+          export PYSPARK_PYTHON="./.venv/Scripts/python.exe"
+          export PYSPARK_DRIVER_PYTHON="./.venv/Scripts/python.exe"
+          uv run pytest -v
+        else
+          # On Linux/macOS, use standard paths and run all tests
+          export PYSPARK_PYTHON="./.venv/bin/python"
+          export PYSPARK_DRIVER_PYTHON="./.venv/bin/python"
+          uv run pytest -v
+        fi
